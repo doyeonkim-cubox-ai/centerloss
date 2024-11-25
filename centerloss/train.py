@@ -23,7 +23,7 @@ def main():
         filename="lenet"
     )
     trainer = L.Trainer(
-        max_epochs=100,
+        max_epochs=80,
         accelerator='cuda',
         logger=wandb_logger,
         callbacks=cp_callback,
