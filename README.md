@@ -20,7 +20,7 @@ pip install -r requirements.txt
 python -m centerloss.train
 
 # inference
-python -m centerloss.inference
+python -m centerloss.inference -img "${img_path}"
 ```
 For jupyter notebook, you can comment/uncomment lines that you're going to use/not use.
 You can change hyperparameters in cell[5]
