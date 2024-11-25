@@ -48,18 +48,18 @@ You can change hyperparameters in cell[5]
 
 - softmax loss only
 
-<img src="./result/softmax_train.png" width="400" height="300">
-<img src="./result/softmax_valid.png" width="400" height="300">
+<img src="./result/softmax_train.png" width="350" height="300">
+<img src="./result/softmax_valid.png" width="350" height="300">
 
 - softmax loss + center loss
 
-<img src="./result/center_train.png" width="400" height="300">
-<img src="./result/center_valid.png" width="400" height="300">
+<img src="./result/center_train.png" width="350" height="300">
+<img src="./result/center_valid.png" width="350" height="300">
 
 - softmax loss + center loss with different lambda
 
-<img src="./result/center(0.001).png" width="400" height="300">
-<img src="./result/center_train.png" width="400" height="300">
+<img src="./result/center(0.001).png" width="350" height="300">
+<img src="./result/center_train.png" width="350" height="300">
 
-<img src="./result/center(0.1).png" width="400" height="300">
-<img src="./result/center(1).png" width="400" height="300">
+<img src="./result/center(0.1).png" width="350" height="300">
+<img src="./result/center(1).png" width="350" height="300">
