@@ -10,6 +10,7 @@ from centerloss.loss import CenterLoss
 import wandb
 import matplotlib.pyplot as plt
 import random
+import numpy as np
 
 
 class CLModlit(L.LightningModule):
@@ -20,25 +21,27 @@ class CLModlit(L.LightningModule):
         self.center_loss = CenterLoss()
         self.lamda = lamda
         self.accuracy = torchmetrics.Accuracy(task='multiclass', num_classes=10)
-        self.automatic_optimization = False
 
     def configure_optimizers(self):
-        optimizer1 = torch.optim.SGD(self.model.parameters(), lr=1e-3, momentum=0.9, weight_decay=5e-4)
-        optimizer2 = torch.optim.SGD(self.center_loss.parameters(), lr=0.5)
+        optimizer = torch.optim.SGD(self.model.parameters(), lr=1e-3, momentum=0.9, weight_decay=5e-4)
 
-        return [optimizer1, optimizer2]
+        return optimizer
 
     def forward(self, x):
         return self.model(x)
 
     def training_step(self, batch, batch_idx):
         x, y = batch
-        opt = self.optimizers()
-        label, coord = self.model(x)
-        coords = coord.detach().cpu().numpy()
-        labels = y.detach().cpu().numpy()
-        plt.figure(figsize=(4, 4))
-        plt.scatter(coords[:, 0], coords[:, 1], c=labels, s=50, cmap='hsv')
+        all_features, all_labels = [], []
+        coord, label = self.model(x)
+        all_features.append(coord.data.cpu().numpy())
+        all_labels.append(label.data.cpu().numpy())
+        all_features = np.concatenate(all_features, axis=0)
+        all_labels = np.concatenate(all_labels, axis=0)
+        colors = np.array(['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'])
+        label_idx = all_labels.argmax(axis=1)
+        for i in range(10):
+            plt.scatter(all_features[label_idx == i, 0], all_features[label_idx == i, 1], color=colors[i], s=50)
         plt.xlabel('x')
         plt.ylabel('y')
         wandb.log({"train distribution": plt})
@@ -48,23 +51,24 @@ class CLModlit(L.LightningModule):
         center_loss = self.center_loss(coord, y)
         loss = softmax_loss + self.lamda * center_loss
 
-        opt.zero_grad()
-        self.manual_backward(loss)
-        opt.step()
-
         self.log('train loss', loss)
         self.log('train softmax loss', softmax_loss)
         self.log('train center loss', center_loss)
 
-        return softmax_loss, center_loss
+        return loss
 
     def validation_step(self, batch, batch_idx):
         x, y = batch
-        label, coord = self.model(x)
-        coords = coord.detach().cpu().numpy()
-        labels = y.detach().cpu().numpy()
-        plt.figure(figsize=(4, 4))
-        plt.scatter(coords[:, 0], coords[:, 1], c=labels, s=50, cmap='hsv')
+        all_features, all_labels = [], []
+        coord, label = self.model(x)
+        all_features.append(coord.data.cpu().numpy())
+        all_labels.append(label.data.cpu().numpy())
+        all_features = np.concatenate(all_features, axis=0)
+        all_labels = np.concatenate(all_labels, axis=0)
+        colors = np.array(['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9'])
+        label_idx = all_labels.argmax(axis=1)
+        for i in range(10):
+            plt.scatter(all_features[label_idx == i, 0], all_features[label_idx == i, 1], color=colors[i], s=50)
         plt.xlabel('x')
         plt.ylabel('y')
         wandb.log({"valid distribution": plt})
@@ -77,7 +81,7 @@ class CLModlit(L.LightningModule):
 
     def test_step(self, batch, batch_idx):
         x, y = batch
-        label, coord = self.model(x)
+        coord, label = self.model(x)
         loss = self.softmax_loss(label, y) + self.lamda*self.center_loss(coord, y)
         correct_pred = torch.argmax(label, dim=1)
         acc = self.accuracy(correct_pred, y)
