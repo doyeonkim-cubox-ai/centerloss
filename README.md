@@ -25,24 +25,37 @@ python -m centerloss.inference
 
 ##### 1. train summary
 
-|  class  | Images | Instances | Box(P) | Box(R) | Box(mAP50) | Box(mAP50-95) | 
-|---------|--------|-----------|--------|--------|------------|---------------|
-|  All    | 3347   | 10299     | 0.891  | 0.798  | 0.869      | 0.578         |
+| model   | Loss function  | lambda |
+|---------|----------------|--------|
+| LeNet++ | SoftMax        | -      |
+| LeNet++ | SoftMax+Center | 1      |
+| LeNet++ | SoftMax+Center | 0.1    |
+| LeNet++ | SoftMax+Center | 0.01   |
+| LeNet++ | SoftMax+Center | 0.001  |
 
-- optimizer: Adam(lr=0.01, momentum=0.937)
+
+- optimizer1: SGD(lr=0.01, momentum=0.9, weight decay=0.0005)
+- optimizer2: SGD(lr=0.5)
 - total epochs: 100
-- params: 2.5M
-- GFLOPs: 6.3
+- params: 796K
 
 
 ##### 2. plots
 
-<img src="./result/plots.png" width="600" height="300">
+- softmax loss only
 
-<img src="./result/PR_curve.png" width="600" height="400">
-<img src="./result/confusion_matrix_normalized.png" width="600" height="400">
+<img src="./result/softmax_train.png" width="400" height="300">
+<img src="./result/softmax_valid.png" width="400" height="300">
 
-##### 3. inference result
+- softmax loss + center loss
 
-<img src="./result/output.png" width="810" height="1080">
+<img src="./result/center_train.png" width="400" height="300">
+<img src="./result/center_valid.png" width="400" height="300">
 
+- softmax loss + center loss with different lambda
+
+<img src="./result/center(0.001).png" width="400" height="300">
+<img src="./result/center_train.png" width="400" height="300">
+
+<img src="./result/center(0.1).png" width="400" height="300">
+<img src="./result/center(1).png" width="400" height="300">
