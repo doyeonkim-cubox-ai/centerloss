@@ -1,0 +1,8 @@
+.idea
+.gitmessage.txt
+**/__pycache__
+model
+**/wandb
+logs/
+centerloss/debug.ipynb
+images
