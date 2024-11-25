@@ -4,5 +4,4 @@
 model
 **/wandb
 logs/
-centerloss/debug.ipynb
 images
