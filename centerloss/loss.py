@@ -16,6 +16,7 @@ class CenterLoss(nn.Module):
     def forward(self, pred, labels):
         centers = self.center[labels]
         loss = self.mse_loss(pred, centers)
+        loss /= labels.shape[0]
         loss /= 2
 
         return loss

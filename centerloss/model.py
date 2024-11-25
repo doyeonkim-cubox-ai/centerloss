@@ -16,8 +16,8 @@ class CLModel(nn.Module):
         self.conv3_1 = nn.Conv2d(128, 128, 5, padding=2, stride=1, bias=False)
         self.maxpool = nn.MaxPool2d(2, 2)
         self.prelu = nn.PReLU()
-        self.fc1 = nn.Linear(1152, 10, bias=False)
-        self.fc2 = nn.Linear(10, 2, bias=False)
+        self.fc1 = nn.Linear(1152, 2, bias=False)
+        self.fc2 = nn.Linear(2, 10, bias=False)
 
     def forward(self, x):
         x = self.conv1(x)
