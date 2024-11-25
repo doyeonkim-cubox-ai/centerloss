@@ -9,7 +9,7 @@ import argparse
 
 
 def main():
-    dm = CLDataModule(data_dir="./mnist", batch_size=32)
+    dm = CLDataModule(data_dir="./mnist", batch_size=128)
 
     checkpoint = "./model/lenet.ckpt"
     net = CLModlit.load_from_checkpoint(checkpoint, lamda=0.01)

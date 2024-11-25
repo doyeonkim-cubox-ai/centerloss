@@ -44,7 +44,7 @@ def main():
     # ============================================ postprocess ============================================ #
     #########################################################################################################
     # using your own data
-    result = result[0].squeeze(0).detach().to('cpu').numpy()
+    result = result[1].squeeze(0).detach().to('cpu').numpy()
     res = np.argmax(result)
     print(res)
 
